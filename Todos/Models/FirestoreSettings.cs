@@ -2,5 +2,5 @@
 
 public class FirestoreSettings
 {
-    
+    public string Collection { get; set; }
 }

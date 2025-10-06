@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Todo.Models;
+namespace Todos.Models;
 
 public class Todo
 {

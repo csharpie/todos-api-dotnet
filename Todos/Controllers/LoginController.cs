@@ -1,51 +1,32 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Todos.Models;
+using Todos.Services;
 
 namespace Todos.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class TokenController : ControllerBase
+public class LoginController : ControllerBase
 {
-    private readonly ILogger<TokenController> _logger;
+    private readonly ILogger<LoginController> _logger;
+    private readonly TokenService _tokenService;
 
-    public TokenController(ILogger<TokenController> logger)
+    public LoginController(ILogger<LoginController> logger, TokenService tokenService)
     {
         _logger = logger;
+        _tokenService = tokenService;
     }
 
     [HttpPost(Name = "Login")]
-    public IActionResult Login([FromBody] LoginModel model)
+    public IActionResult Login([FromBody] Login model)
     {
-        if (model.UserName != "brad" || model.DoorCode != Environment.GetEnvironmentVariable("DoorCode"))
+        if (model.UserName != Environment.GetEnvironmentVariable("AuthorizedUser") || model.Password != Environment.GetEnvironmentVariable("AuthorizedUserPassword"))
             return Unauthorized();
-        var token = GenerateJwtToken(model.UserName);
+        
+        var token = _tokenService.GenerateToken();
         return Ok(new { token });
     }
-    
-    private string GenerateJwtToken(string userName)
-    {
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.Name, userName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
-
-        var key = new SymmetricSecurityKey("super-secret-key"u8.ToArray());
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: "FantasyApp",
-            audience: "FantasyUsers",
-            claims: claims,
-            expires: DateTime.Now.AddHours(1),
-            signingCredentials: creds);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
 }
