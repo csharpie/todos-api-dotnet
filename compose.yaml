@@ -1,7 +1,7 @@
 ﻿services:
   todo:
-    image: todo
+    image: todos
     build:
       context: .
-      dockerfile: Todo/Dockerfile
+      dockerfile: Todos/Dockerfile
 
