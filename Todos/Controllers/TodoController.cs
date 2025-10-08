@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Todos.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Google.Apis.Auth.OAuth2;
+using System.Text;
 
 namespace Todos.Controllers;
 
@@ -12,11 +14,16 @@ public class TodoController : ControllerBase
 {
     private readonly IOptions<FirestoreSettings> _firestoreSettings;
     private readonly FirestoreDb _db;
-    
+
     public TodoController(IOptions<FirestoreSettings> firestoreSettings)
     {
         _firestoreSettings = firestoreSettings;
-        _db = FirestoreDb.Create(Environment.GetEnvironmentVariable("TODO_API_FIRESTOREDB_PROJECT"));
+
+        var base64Config = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS_BASE64");
+        var jsonConfig = Encoding.UTF8.GetString(Convert.FromBase64String(base64Config));
+        var credential = GoogleCredential.FromJson(jsonConfig);
+
+        _db = new FirestoreDbBuilder { ProjectId = Environment.GetEnvironmentVariable("TODO_API_FIRESTOREDB_PROJECT"), Credential = credential }.Build();
     }
     
     [Authorize]

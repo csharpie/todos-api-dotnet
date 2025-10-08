@@ -1,7 +1,15 @@
 ﻿services:
-  todo:
+  todos:
     image: todos
     build:
       context: .
       dockerfile: Todos/Dockerfile
-
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - AuthorizedUser=${AuthorizedUser}
+      - AuthorizedUserPassword=${AuthorizedUserPassword}
+      - TODO_API_FIRESTOREDB_PROJECT=${TODO_API_FIRESTOREDB_PROJECT}
+      - GOOGLE_APPLICATION_CREDENTIALS_BASE64=${GOOGLE_APPLICATION_CREDENTIALS_BASE64}

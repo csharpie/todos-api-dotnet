@@ -6,7 +6,7 @@ This is a simple C# Web API built with ASP.NET Core 9, designed as the foundatio
 
 ## 🚀 Hosting & Storage
 
-- **Cloud Hosting**: The API will be deployed to [Vercel](https://vercel.com), leveraging its simplicity for hosting serverless endpoints.
+- **Cloud Hosting**: Pick your cloud hosting provider. Use Dockerfile and compose.yaml to deploy.
 - **Datastore**: JSON data is stored in [Google Firestore](https://firebase.google.com/docs/firestore), chosen for its ease of use and flexible document model.
 
 ---

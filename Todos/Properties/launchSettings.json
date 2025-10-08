@@ -20,7 +20,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "AuthorizedUser": "SUPER_SECRET_USER_NAME",
-        "AuthorizedUserPassword": "SUPER_SECRET_PASSWOR"
+        "AuthorizedUserPassword": "SUPER_SECRET_PASSWORD"
       }
     }
   }

@@ -1,7 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Todos.Models;
 using Todos.Services;
 
@@ -20,7 +17,7 @@ public class LoginController : ControllerBase
         _tokenService = tokenService;
     }
 
-    [HttpPost(Name = "Login")]
+    [HttpPost("Login")]
     public IActionResult Login([FromBody] Login model)
     {
         if (model.UserName != Environment.GetEnvironmentVariable("AuthorizedUser") || model.Password != Environment.GetEnvironmentVariable("AuthorizedUserPassword"))

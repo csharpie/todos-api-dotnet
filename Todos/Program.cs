@@ -1,4 +1,5 @@
 using System.Text;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -48,9 +49,20 @@ public class Program
                 }
             });
         });
-    
+
+        string? encryptionKey = null;
+        var key = new byte[32];
+        RandomNumberGenerator.Fill(key);
+        
         builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-        var encryptionKey = builder.Configuration["AppSettings:EncryptionKey"];
+
+        if (string.IsNullOrEmpty(builder.Configuration["AppSettings:EncryptionKey"]))
+        {
+            builder.Configuration["AppSettings:EncryptionKey"] =  Convert.ToBase64String(key);
+        }
+        
+        encryptionKey = builder.Configuration["AppSettings:EncryptionKey"];
+        
         var keyBytes = Encoding.UTF8.GetBytes(encryptionKey);
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -74,8 +86,7 @@ public class Program
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
+        if (app.Environment.IsDevelopment()) {
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
