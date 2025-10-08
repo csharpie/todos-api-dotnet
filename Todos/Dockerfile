@@ -10,7 +10,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy only the .csproj first for restore
-COPY Todos.csproj ./Todos/
+COPY Todos/Todos.csproj ./Todos/
 RUN dotnet restore ./Todos/Todos.csproj
 
 # Copy everything else
